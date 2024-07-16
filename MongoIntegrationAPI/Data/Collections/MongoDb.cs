@@ -25,9 +25,9 @@ namespace MongoIntegrationAPI.Data.Collections
             var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
             ConventionRegistry.Register("camelCase", conventionPack, t => true);
 
-            if (!BsonClassMap.IsClassMapRegistered(typeof(Infectado)))
+            if (!BsonClassMap.IsClassMapRegistered(typeof(Infected)))
             {
-                BsonClassMap.RegisterClassMap<Infectado>(i =>
+                BsonClassMap.RegisterClassMap<Infected>(i =>
                 {
                     i.AutoMap();
                     i.SetIgnoreExtraElements(true);

@@ -2,7 +2,7 @@
 
 namespace MongoIntegrationAPI.Model
 {
-    public class InfectadoDto
+    public class InfectedDto
     {
         public DateTime Birthday { get; set; }
         public string Sex { get; set; }
