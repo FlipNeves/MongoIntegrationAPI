@@ -2,9 +2,9 @@
 
 namespace MongoIntegrationAPI.Data.Collections
 {
-    public class Infectado
+    public class Infected
     {
-        public Infectado(DateTime birthday, string sex, double latitude, double longitude) 
+        public Infected(DateTime birthday, string sex, double latitude, double longitude) 
         {
             Birthday = birthday;
             Sex = sex;
