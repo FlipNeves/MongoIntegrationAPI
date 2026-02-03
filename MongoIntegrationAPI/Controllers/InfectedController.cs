@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using MongoIntegrationAPI.Data.Collections;
+using MongoIntegrationAPI.Domain;
 using MongoIntegrationAPI.Model;
 
 namespace MongoIntegrationAPI.Controllers
@@ -9,20 +8,18 @@ namespace MongoIntegrationAPI.Controllers
     [Route("[controller]")]
     public class InfectedController : ControllerBase
     {
-        private readonly MongoDb _mongoDb;
-        private readonly IMongoCollection<Infected> _infectedsCollection;
+        private readonly IInfectedRepository _infectedRepository;
 
-        public InfectedController(MongoDb mongoDb)
+        public InfectedController(IInfectedRepository infectedRepository)
         {
-            _mongoDb = mongoDb;
-            _infectedsCollection = _mongoDb.Db.GetCollection<Infected>(typeof(Infected).Name.ToLower());
+            _infectedRepository = infectedRepository;
         }
 
         [HttpPost]
         public async Task<IActionResult> SaveInfectedAsync([FromBody] InfectedDto request)
         {
             var infected = new Infected(request.Birthday, request.Sex, request.Latitude, request.Longitude);
-            await _infectedsCollection.InsertOneAsync(infected);
+            await _infectedRepository.Add(infected);
 
             return Created();
         }
@@ -30,7 +27,7 @@ namespace MongoIntegrationAPI.Controllers
         [HttpGet]
         public async Task<ActionResult> GetInfectedsAsync()
         {
-            var infecteds = await _infectedsCollection.Find(Builders<Infected>.Filter.Empty).ToListAsync();
+            var infecteds = await _infectedRepository.GetAll();
             return Ok(infecteds);
         }
     }

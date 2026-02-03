@@ -1,6 +1,6 @@
-﻿using MongoDB.Driver.GeoJsonObjectModel;
+using MongoDB.Driver.GeoJsonObjectModel;
 
-namespace MongoIntegrationAPI.Data.Collections
+namespace MongoIntegrationAPI.Domain
 {
     public class Infected
     {
