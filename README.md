@@ -1,6 +1,8 @@
 # MongoIntegrationAPI
 
-This project presents a well-structured .NET 8 API template, born from experiences where past MongoDB integrations inadvertently locked down architectural flexibility(oh that experiences...). It aims to demonstrate best practices for MongoDB integration, ensuring a clean architecture that avoids common pitfalls. This serves as a clear example for developers looking to build scalable and maintainable applications with .NET and MongoDB, fostering robust design from the outset.
+Born from experiences where past MongoDB integrations inadvertently locked down architectural flexibility(oh that experiences...). 
+
+It aims to demonstrate best practices for MongoDB integration, ensuring a clean architecture that avoids common pitfalls. This serves as a clear example for developers looking to build scalable and maintainable applications with .NET and MongoDB, fostering robust design from the outset.
 
 ## Core Concepts & Architectural Patterns
 
