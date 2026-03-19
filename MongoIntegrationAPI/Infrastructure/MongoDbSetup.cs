@@ -1,7 +1,8 @@
-using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
-using MongoIntegrationAPI.Domain;
+using MongoIntegrationAPI.Domain.Interfaces;
+using MongoIntegrationAPI.Infrastructure.Daos;
+using MongoIntegrationAPI.Infrastructure.Repositories;
 
 namespace MongoIntegrationAPI.Infrastructure
 {
@@ -9,36 +10,33 @@ namespace MongoIntegrationAPI.Infrastructure
     {
         public static void AddMongoDb(this IServiceCollection services, IConfiguration configuration)
         {
-            MapClasses();
+            var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
+            ConventionRegistry.Register("camelCase", conventionPack, t => true);
 
             services.AddSingleton<IMongoClient>(sp =>
             {
-                var settings = MongoClientSettings.FromUrl(new MongoUrl(configuration["ConnectionString"]));
+                var settings = MongoClientSettings.FromUrl(new MongoUrl(configuration["ConnectionString"] ?? "mongodb://localhost:27017"));
                 return new MongoClient(settings);
             });
 
             services.AddScoped<IMongoDatabase>(sp =>
             {
                 var client = sp.GetRequiredService<IMongoClient>();
-                return client.GetDatabase(configuration["DbName"]);
+                return client.GetDatabase(configuration["DbName"] ?? "mongo-integration-api");
             });
 
-            services.AddScoped<IInfectedRepository, InfectedRepository>();
-        }
+            // Generic Repository
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-        private static void MapClasses()
-        {
-            var conventionPack = new ConventionPack { new CamelCaseElementNameConvention() };
-            ConventionRegistry.Register("camelCase", conventionPack, t => true);
+            // DAOs
+            services.AddScoped<IBookDao, BookDao>();
+            services.AddScoped<IPublisherDao, PublisherDao>();
 
-            if (!BsonClassMap.IsClassMapRegistered(typeof(Infected)))
-            {
-                BsonClassMap.RegisterClassMap<Infected>(i =>
-                {
-                    i.AutoMap();
-                    i.SetIgnoreExtraElements(true);
-                });
-            }
+            // Repositories
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IPublisherRepository, PublisherRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
         }
     }
 }
