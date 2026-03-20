@@ -2,6 +2,7 @@ using MongoIntegrationAPI.Domain.Entities;
 using MongoIntegrationAPI.Domain.Interfaces;
 using MongoIntegrationAPI.Infrastructure.Daos;
 using MongoIntegrationAPI.Infrastructure.DataModels;
+using MongoIntegrationAPI.Model;
 
 namespace MongoIntegrationAPI.Infrastructure.Repositories
 {
@@ -27,7 +28,7 @@ namespace MongoIntegrationAPI.Infrastructure.Repositories
             };
 
             await _genericRepository.AddAsync(dataModel);
-            book.Id = dataModel.Id!; // Update domain model with generated ID
+            book.Id = dataModel.Id!; 
         }
 
         public async Task<Book?> GetByIdAsync(string id)
@@ -73,7 +74,7 @@ namespace MongoIntegrationAPI.Infrastructure.Repositories
                 Id = dataModel.Id ?? string.Empty,
                 Title = dataModel.Title,
                 PublisherId = dataModel.PublisherId,
-                Authors = dataModel.Authors.Select(a => new Author { Id = a.Id, Name = a.Name }).ToList(),
+                Authors = dataModel.Authors.Select(a => new AuthorInBook { Id = a.Id, Name = a.Name }).ToList(),
                 Categories = dataModel.Categories.Select(c => new Category { Name = c.Name, Description = c.Description }).ToList()
             };
         }
