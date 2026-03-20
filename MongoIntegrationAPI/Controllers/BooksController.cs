@@ -11,22 +11,30 @@ namespace MongoIntegrationAPI.Controllers
     {
         private readonly IBookRepository _bookRepository;
         private readonly ICategoryRepository _categoryRepository;
-        private readonly IAuthorRepository _authorRepository;
 
-        public BooksController(IBookRepository bookRepository, ICategoryRepository categoryRepository, IAuthorRepository authorRepository)
+        public BooksController(IBookRepository bookRepository, ICategoryRepository categoryRepository)
         {
             _bookRepository = bookRepository;
             _categoryRepository = categoryRepository;
-            _authorRepository = authorRepository;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateBook([FromBody] BookCreateDto request)
         {
+            var categories = request.Categories.Select(x => _categoryRepository.GetCategoryByType((int)x)).ToList();
             var book = new Book
             {
                 Title = request.Title,
                 PublisherId = request.PublisherId,
+                Authors = request.Authors.SelectMany(x => new List<AuthorInBook>
+                {
+                    new AuthorInBook
+                    {
+                        Name = x.Name,
+                        Id = x.Id
+                    }
+                }).ToList(),
+                Categories = categories!
             };
             
 
