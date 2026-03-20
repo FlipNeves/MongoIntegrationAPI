@@ -15,14 +15,16 @@ namespace MongoIntegrationAPI.Infrastructure
 
             services.AddSingleton<IMongoClient>(sp =>
             {
-                var settings = MongoClientSettings.FromUrl(new MongoUrl(configuration["ConnectionString"] ?? "mongodb://localhost:27017"));
+                var connectionString = configuration["MONGO_URI"] ?? configuration.GetConnectionString("DefaultConnection") ?? configuration["ConnectionString"] ?? "mongodb://localhost:27017";
+                var settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
                 return new MongoClient(settings);
             });
 
             services.AddScoped<IMongoDatabase>(sp =>
             {
                 var client = sp.GetRequiredService<IMongoClient>();
-                return client.GetDatabase(configuration["DbName"] ?? "mongo-integration-api");
+                var databaseName = configuration["MONGO_DB_NAME"] ?? configuration["DbName"] ?? "mongo-integration-api";
+                return client.GetDatabase(databaseName);
             });
 
             // Generic Repository
