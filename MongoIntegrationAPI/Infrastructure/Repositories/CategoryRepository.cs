@@ -5,6 +5,7 @@ using MongoIntegrationAPI.Domain.Interfaces;
 
 namespace MongoIntegrationAPI.Infrastructure.Repositories
 {
+    // Backed by an enum, not a database — methods are intentionally synchronous.
     public class CategoryRepository : ICategoryRepository
     {
         public IEnumerable<Category> GetAllCategories()

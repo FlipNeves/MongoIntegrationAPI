@@ -4,19 +4,19 @@ namespace MongoIntegrationAPI.Domain.Enums
 {
     public enum CategoryType
     {
-        [Description("Ficção Científica explorando o futuro e a tecnologia.")]
+        [Description("Science fiction exploring the future and technology.")]
         SciFi = 1,
-        
-        [Description("Mundos mágicos e aventuras épicas.")]
+
+        [Description("Magical worlds and epic adventures.")]
         Fantasy = 2,
-        
-        [Description("Histórias baseadas em fatos e eventos reais.")]
+
+        [Description("Stories based on real facts and events.")]
         NonFiction = 3,
-        
-        [Description("Investigação de crimes e quebra-cabeças complexos.")]
+
+        [Description("Crime investigations and complex puzzles.")]
         Mystery = 4,
-        
-        [Description("Livros técnicos e acadêmicos sobre tecnologia na informação.")]
+
+        [Description("Technical and academic books about information technology.")]
         Technology = 5
     }
 }

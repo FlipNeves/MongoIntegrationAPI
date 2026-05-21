@@ -4,7 +4,7 @@ namespace MongoIntegrationAPI.Infrastructure.Daos
 {
     public interface IBookDao
     {
-        Task AddAuthorToBookAtomicAsync(string bookId, AuthorEmbeddedModel author);
-        Task AddCategoryToBookAtomicAsync(string bookId, CategoryEmbeddedModel category);
+        Task<bool> AddAuthorToBookAtomicAsync(string bookId, AuthorEmbeddedModel author);
+        Task<bool> AddCategoryToBookAtomicAsync(string bookId, CategoryEmbeddedModel category);
     }
 }
