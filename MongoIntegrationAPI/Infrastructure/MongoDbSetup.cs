@@ -30,9 +30,8 @@ namespace MongoIntegrationAPI.Infrastructure
             // Generic Repository
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            // DAOs
+            // DAOs (register here once an atomic op is implemented)
             services.AddScoped<IBookDao, BookDao>();
-            services.AddScoped<IPublisherDao, PublisherDao>();
 
             // Repositories
             services.AddScoped<IBookRepository, BookRepository>();

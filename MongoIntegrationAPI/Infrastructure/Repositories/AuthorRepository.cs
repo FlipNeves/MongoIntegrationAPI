@@ -28,25 +28,23 @@ namespace MongoIntegrationAPI.Infrastructure.Repositories
         public async Task<Author?> GetByIdAsync(string id)
         {
             var dataModel = await _genericRepository.GetByIdAsync(id);
-            if (dataModel == null) return null;
+            return dataModel == null ? null : MapToDomain(dataModel);
+        }
 
+        public async Task<IEnumerable<Author>> GetAllAsync()
+        {
+            var dataModels = await _genericRepository.GetAllAsync();
+            return dataModels.Select(MapToDomain);
+        }
+
+        private static Author MapToDomain(AuthorDataModel dataModel)
+        {
             return new Author
             {
                 Id = dataModel.Id ?? string.Empty,
                 Name = dataModel.Name,
                 Bibliography = dataModel.Bibliography
             };
-        }
-
-        public async Task<IEnumerable<Author>> GetAllAsync()
-        {
-            var dataModels = await _genericRepository.GetAllAsync();
-            return dataModels.Select(dm => new Author
-            {
-                Id = dm.Id ?? string.Empty,
-                Name = dm.Name,
-                Bibliography = dm.Bibliography
-            });
         }
     }
 }

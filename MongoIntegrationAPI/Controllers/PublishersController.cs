@@ -20,7 +20,7 @@ namespace MongoIntegrationAPI.Controllers
         public async Task<IActionResult> CreatePublisher([FromBody] PublisherCreateDto request)
         {
             var publisher = new Publisher { Name = request.Name };
-            await _publisherRepository.AddPublisherAsync(publisher);
+            await _publisherRepository.AddAsync(publisher);
 
             return CreatedAtAction(nameof(GetPublisher), new { id = publisher.Id }, publisher);
         }

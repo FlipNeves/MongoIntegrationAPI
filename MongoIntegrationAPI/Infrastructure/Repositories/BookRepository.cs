@@ -2,7 +2,6 @@ using MongoIntegrationAPI.Domain.Entities;
 using MongoIntegrationAPI.Domain.Interfaces;
 using MongoIntegrationAPI.Infrastructure.Daos;
 using MongoIntegrationAPI.Infrastructure.DataModels;
-using MongoIntegrationAPI.Model;
 
 namespace MongoIntegrationAPI.Infrastructure.Repositories
 {
@@ -17,7 +16,7 @@ namespace MongoIntegrationAPI.Infrastructure.Repositories
             _bookDao = bookDao;
         }
 
-        public async Task AddBookAsync(Book book)
+        public async Task AddAsync(Book book)
         {
             var dataModel = new BookDataModel
             {
@@ -28,15 +27,13 @@ namespace MongoIntegrationAPI.Infrastructure.Repositories
             };
 
             await _genericRepository.AddAsync(dataModel);
-            book.Id = dataModel.Id!; 
+            book.Id = dataModel.Id!;
         }
 
         public async Task<Book?> GetByIdAsync(string id)
         {
             var dataModel = await _genericRepository.GetByIdAsync(id);
-            if (dataModel == null) return null;
-
-            return MapToDomain(dataModel);
+            return dataModel == null ? null : MapToDomain(dataModel);
         }
 
         public async Task<IEnumerable<Book>> GetAllAsync()
@@ -45,7 +42,7 @@ namespace MongoIntegrationAPI.Infrastructure.Repositories
             return dataModels.Select(MapToDomain);
         }
 
-        public async Task AddAuthorToBookAsync(string bookId, Author author)
+        public async Task<bool> AddAuthorToBookAsync(string bookId, Author author)
         {
             var embeddedAuthor = new AuthorEmbeddedModel
             {
@@ -53,10 +50,10 @@ namespace MongoIntegrationAPI.Infrastructure.Repositories
                 Name = author.Name
             };
 
-            await _bookDao.AddAuthorToBookAtomicAsync(bookId, embeddedAuthor);
+            return await _bookDao.AddAuthorToBookAtomicAsync(bookId, embeddedAuthor);
         }
 
-        public async Task AddCategoryToBookAsync(string bookId, Category category)
+        public async Task<bool> AddCategoryToBookAsync(string bookId, Category category)
         {
             var embeddedCategory = new CategoryEmbeddedModel
             {
@@ -64,10 +61,10 @@ namespace MongoIntegrationAPI.Infrastructure.Repositories
                 Description = category.Description
             };
 
-            await _bookDao.AddCategoryToBookAtomicAsync(bookId, embeddedCategory);
+            return await _bookDao.AddCategoryToBookAtomicAsync(bookId, embeddedCategory);
         }
 
-        private Book MapToDomain(BookDataModel dataModel)
+        private static Book MapToDomain(BookDataModel dataModel)
         {
             return new Book
             {

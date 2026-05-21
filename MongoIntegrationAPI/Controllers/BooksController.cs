@@ -26,19 +26,11 @@ namespace MongoIntegrationAPI.Controllers
             {
                 Title = request.Title,
                 PublisherId = request.PublisherId,
-                Authors = request.Authors.SelectMany(x => new List<AuthorInBook>
-                {
-                    new AuthorInBook
-                    {
-                        Name = x.Name,
-                        Id = x.Id
-                    }
-                }).ToList(),
+                Authors = request.Authors.Select(x => new AuthorInBook { Id = x.Id, Name = x.Name }).ToList(),
                 Categories = categories!
             };
-            
 
-            await _bookRepository.AddBookAsync(book);
+            await _bookRepository.AddAsync(book);
 
             return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
         }
@@ -62,29 +54,26 @@ namespace MongoIntegrationAPI.Controllers
         [HttpPost("{id}/authors")]
         public async Task<IActionResult> AddAuthorToBook(string id, [FromBody] AuthorDto request)
         {
-            var book = await _bookRepository.GetByIdAsync(id);
-            if (book == null) return NotFound("Book not found");
-
             var author = new Author
             {
-                Name = request.Name,
+                Id = request.Id,
+                Name = request.Name
             };
 
-            await _bookRepository.AddAuthorToBookAsync(id, author);
+            var success = await _bookRepository.AddAuthorToBookAsync(id, author);
+            if (!success) return NotFound("Book not found");
 
-            return Ok(new { message = "Author created and linked successfully", author });
+            return Ok(new { message = "Author linked successfully", author });
         }
 
         [HttpPost("{id}/categories")]
         public async Task<IActionResult> AddCategoryToBook(string id, [FromBody] CategoryDto request)
         {
-            var book = await _bookRepository.GetByIdAsync(id);
-            if (book == null) return NotFound("Book not found");
-
             var category = _categoryRepository.GetCategoryByType(request.CategoryId);
             if (category == null) return BadRequest("Invalid Category ID");
 
-            await _bookRepository.AddCategoryToBookAsync(id, category);
+            var success = await _bookRepository.AddCategoryToBookAsync(id, category);
+            if (!success) return NotFound("Book not found");
 
             return Ok(new { message = "Category added successfully", category });
         }
