@@ -32,5 +32,17 @@ namespace MongoIntegrationAPI.Infrastructure.Repositories
             var filter = Builders<TDocument>.Filter.Eq("_id", new ObjectId(id));
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
+
+        public async Task ReplaceAsync(string id, TDocument document)
+        {
+            var filter = Builders<TDocument>.Filter.Eq("_id", new ObjectId(id));
+            await _collection.ReplaceOneAsync(filter, document);
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            var filter = Builders<TDocument>.Filter.Eq("_id", new ObjectId(id));
+            await _collection.DeleteOneAsync(filter);
+        }
     }
 }
